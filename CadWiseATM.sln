@@ -7,9 +7,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{C01A0016-280
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{5FD0ABCA-3987-47A1-A33E-2A63CF01010D}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CadWiseATM", "src\CadWiseATM.csproj", "{4899ED49-605D-422C-96E4-D427A13436EC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CadWiseATMApp", "src\CadWiseATMApp.csproj", "{4899ED49-605D-422C-96E4-D427A13436EC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CadWiseTest", "CadWiseTest\CadWiseTest.csproj", "{E1C7D9B5-8732-4F4B-B9A6-D21E5C6B486F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CadWiseTest", "CadWiseTest\CadWiseTest.csproj", "{E1C7D9B5-8732-4F4B-B9A6-D21E5C6B486F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CadWiseAtm", "CadWiseAtm\CadWiseAtm.csproj", "{75696898-9AD1-4BE2-B167-3BD2BA2BB396}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -25,6 +27,10 @@ Global
 		{E1C7D9B5-8732-4F4B-B9A6-D21E5C6B486F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E1C7D9B5-8732-4F4B-B9A6-D21E5C6B486F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E1C7D9B5-8732-4F4B-B9A6-D21E5C6B486F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{75696898-9AD1-4BE2-B167-3BD2BA2BB396}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{75696898-9AD1-4BE2-B167-3BD2BA2BB396}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{75696898-9AD1-4BE2-B167-3BD2BA2BB396}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{75696898-9AD1-4BE2-B167-3BD2BA2BB396}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -32,6 +38,7 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{4899ED49-605D-422C-96E4-D427A13436EC} = {C01A0016-280E-4BB1-9505-669AD0A50CD8}
 		{E1C7D9B5-8732-4F4B-B9A6-D21E5C6B486F} = {5FD0ABCA-3987-47A1-A33E-2A63CF01010D}
+		{75696898-9AD1-4BE2-B167-3BD2BA2BB396} = {C01A0016-280E-4BB1-9505-669AD0A50CD8}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {9384FB3C-F7EC-4C13-B183-00C8BC6628F9}
