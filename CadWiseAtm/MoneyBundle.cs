@@ -32,7 +32,7 @@
 
         public static MoneyBundle operator -(MoneyBundle s1, int s2)
         {
-            if (s1.Count < s2)
+            if (s1.Count >= s2)
             {
                 return new MoneyBundle(s1.MoneyType, s1.Count - s2);
             }

@@ -14,18 +14,26 @@ namespace CadWiseAtm
             this.ItemsCount = count;
         }
 
-        public MoneyBundle Decrement(MoneyBundle bundles)
+        public MoneyBundle Decrement(MoneyBundle bundel)
         {
-            int operation_count = Math.Min(bundles.Count, this.ItemsCount);
-            this.ItemsCount -= operation_count;
-            return bundles - operation_count;
+            if (CheckMoneyType(bundel.MoneyType) == true)
+            {
+                int operation_count = Math.Min(bundel.Count, this.ItemsCount);
+                this.ItemsCount -= operation_count;
+                bundel -= operation_count;
+            }
+            return bundel;
         }
 
-        public MoneyBundle Increment(MoneyBundle bundles)
+        public MoneyBundle Increment(MoneyBundle bundel)
         {
-            int operation_count = Math.Min(bundles.Count, this.ItemsMaximum - ItemsCount);
-            this.ItemsCount += operation_count;
-            return bundles - operation_count;
+            if (CheckMoneyType(bundel.MoneyType) == true)
+            {
+                int operation_count = Math.Min(bundel.Count, this.ItemsMaximum - ItemsCount);
+                this.ItemsCount += operation_count;
+                bundel -= operation_count;
+            }
+            return bundel;
         }
 
         public bool CheckMoneyType(MoneyType moneyType)
