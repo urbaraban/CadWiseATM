@@ -5,6 +5,7 @@
         public readonly bool IsEmpty => MoneyType.IsEmpty || Count == 0;
         public MoneyType MoneyType { get; }
         public int Count { get; }
+        public int Sum => Count * MoneyType.Nominal;
 
         public MoneyBundle()
         {
@@ -21,6 +22,11 @@
         public MoneyBundle(int nominal, MoneyCurrency currency, int count) : 
             this(new MoneyType(nominal, currency), count)
         { }
+
+        public override string ToString()
+        {
+            return $"{MoneyType} {Count}";
+        }
 
         public static MoneyBundle operator + (MoneyBundle s1, MoneyBundle s2)
         {

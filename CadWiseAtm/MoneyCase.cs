@@ -1,8 +1,9 @@
 ﻿using CadWiseAtm.Interfaces;
+using System.Reflection.Metadata;
 
 namespace CadWiseAtm
 {
-    public class MoneyCase : IMoneyProvider
+    public class MoneyCase : IMoneyProvider, ILimited
     {
         public MoneyType MoneyType { get; }
 
@@ -20,41 +21,39 @@ namespace CadWiseAtm
             this.Limit = limit;
         }
 
-        public MoneyBundle Decrement(MoneyBundle bundel)
+        public MoneyCase(int nominal, MoneyCurrency currency, int limit, int count = 0) : this(new MoneyType(nominal, currency), limit, count) { }
+
+
+        public MoneyBundle Decrement(MoneyBundle bundle)
         {
-            if (CheckMoneyType(bundel.MoneyType) == true)
+            if (CheckMoneyType(bundle.MoneyType) == true && bundle.Count > -1)
             {
-                int operation_count = Math.Min(bundel.Count, this.Count);
+                int operation_count = Math.Min(bundle.Count, this.Count);
                 this.Count -= operation_count;
-                bundel -= operation_count;
+                bundle -= operation_count;
             }
-            return bundel;
+            return bundle;
         }
 
-        public MoneyBundle Increment(MoneyBundle bundel)
+        public MoneyBundle Increment(MoneyBundle bundle)
         {
-            if (CheckMoneyType(bundel.MoneyType) == true)
+            if (CheckMoneyType(bundle.MoneyType) == true && bundle.Count > -1)
             {
-                int operation_count = Math.Min(bundel.Count, this.Limit - Count);
+                int operation_count = Math.Min(bundle.Count, this.Limit - Count);
                 this.Count += operation_count;
-                bundel -= operation_count;
+                bundle -= operation_count;
             }
-            return bundel;
-        }
-
-        public bool CheckIncrement(MoneyBundle bundle)
-        {
-            return true;
-        }
-
-        public bool CheckDecrement(MoneyBundle bundle)
-        {
-            return true;
+            return bundle;
         }
 
         public bool CheckMoneyType(MoneyType moneyType)
         {
             return MoneyType == moneyType;
+        }
+
+        public override string ToString()
+        {
+            return $"{MoneyType} {Count}/{Limit}";
         }
     }
 

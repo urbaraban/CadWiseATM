@@ -12,9 +12,9 @@
             Currency = MoneyCurrency.NONE;
         }
 
-        public MoneyType(double value, MoneyCurrency currency)
+        public MoneyType(double nominal, MoneyCurrency currency)
         {
-            this.Nominal = value;
+            this.Nominal = nominal;
             this.Currency = currency;
         }
 

@@ -1,8 +1,9 @@
 ﻿namespace CadWiseAtm.Interfaces
 {
-    public interface IBundleProvider : IMoneyCase
+    public interface IBundleProvider
     {
-        public bool Increment(IEnumerable<MoneyBundle> bundles);
-        public bool Decrement(IEnumerable<MoneyBundle> bundles);
+        public IEnumerable<MoneyBundle> Decrement(double value, MoneyType likeType);
+        public IEnumerable<MoneyBundle> Increment(IEnumerable<MoneyBundle> bundles);
+
     }
 }
