@@ -3,16 +3,16 @@
     public struct MoneyType
     {
         public bool IsEmpty => Currency == MoneyCurrency.NONE;
-        public double Nominal { get; }
+        public int Nominal { get; }
         public MoneyCurrency Currency { get; }
 
         public MoneyType()
         {
-            Nominal = 0;
+            Nominal = -1;
             Currency = MoneyCurrency.NONE;
         }
 
-        public MoneyType(double nominal, MoneyCurrency currency)
+        public MoneyType(int nominal, MoneyCurrency currency)
         {
             this.Nominal = nominal;
             this.Currency = currency;
