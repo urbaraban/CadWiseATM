@@ -18,6 +18,10 @@
             Count = count;
         }
 
+        public MoneyBundle(int nominal, MoneyCurrency currency, int count) : 
+            this(new MoneyType(nominal, currency), count)
+        { }
+
         public static MoneyBundle operator + (MoneyBundle s1, MoneyBundle s2)
         {
             if (s1.MoneyType == s2.MoneyType)
@@ -45,22 +49,20 @@
         public static IEnumerable<MoneyBundle> Defrag(IEnumerable<MoneyBundle> moneyBundles)
         {
             var result = new List<MoneyBundle>();
-            foreach (var bundle in moneyBundles)
+            var groups = moneyBundles.GroupBy(x => x.MoneyType);
+
+            foreach(var group in groups)
             {
-                IEnumerable<MoneyBundle> collection = moneyBundles.Where(x => x.MoneyType == bundle.MoneyType);
-                if (collection.Count() == 1)
+                if (group.Count() > 0)
                 {
-                    result.AddRange(collection);
-                }
-                else if (collection.Count() > 1)
-                {
-                    MoneyBundle union = collection.ElementAt(0);
-                    for (int i = 1; i < collection.Count(); i += 1)
+                    MoneyBundle sum = group.ElementAt(0);
+                    for (int i = 1; i < group.Count(); i += 1)
                     {
-                        union += collection.ElementAt(i);
+                        sum += group.ElementAt(i);
                     }
-                    result.Add(union);
+                    result.Add(sum);
                 }
+                
             }
             return result;
         }

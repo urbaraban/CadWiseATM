@@ -2,24 +2,30 @@
 
 namespace CadWiseAtm
 {
-    public class MoneyCase : LimitMoneyContainer, IMoneyProvider
+    public class MoneyCase : IMoneyProvider
     {
         public MoneyType MoneyType { get; }
 
-        public override double Sum => ItemsCount * MoneyType.Nominal;
+        public double Sum => Count * MoneyType.Nominal;
 
-        public MoneyCase(MoneyType moneytype, int maximumcount, int count = 0) : base(maximumcount)
+        public int Count { get; protected set; } = 0;
+        public int Limit { get; }
+        public bool IsFull => this.Count == this.Limit;
+
+
+        public MoneyCase(MoneyType moneytype, int limit, int count = 0)
         {
             this.MoneyType = moneytype;
-            this.ItemsCount = count;
+            this.Count = count;
+            this.Limit = limit;
         }
 
         public MoneyBundle Decrement(MoneyBundle bundel)
         {
             if (CheckMoneyType(bundel.MoneyType) == true)
             {
-                int operation_count = Math.Min(bundel.Count, this.ItemsCount);
-                this.ItemsCount -= operation_count;
+                int operation_count = Math.Min(bundel.Count, this.Count);
+                this.Count -= operation_count;
                 bundel -= operation_count;
             }
             return bundel;
@@ -29,11 +35,21 @@ namespace CadWiseAtm
         {
             if (CheckMoneyType(bundel.MoneyType) == true)
             {
-                int operation_count = Math.Min(bundel.Count, this.ItemsMaximum - ItemsCount);
-                this.ItemsCount += operation_count;
+                int operation_count = Math.Min(bundel.Count, this.Limit - Count);
+                this.Count += operation_count;
                 bundel -= operation_count;
             }
             return bundel;
+        }
+
+        public bool CheckIncrement(MoneyBundle bundle)
+        {
+            return true;
+        }
+
+        public bool CheckDecrement(MoneyBundle bundle)
+        {
+            return true;
         }
 
         public bool CheckMoneyType(MoneyType moneyType)

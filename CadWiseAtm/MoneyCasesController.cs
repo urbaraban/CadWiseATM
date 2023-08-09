@@ -1,40 +1,60 @@
 ﻿using CadWiseAtm.Interfaces;
-using System.Collections;
 
 namespace CadWiseAtm
 {
-    public class MoneyCasesController : LimitMoneyContainer, IList<IMoneyProvider>, IBundleProvider
+    public class MoneyCasesController : List<MoneyCase>, IMoneyProvider
     {
         public MoneyType MoneyType { get; }
 
-        public override double Sum => GetSum();
+        public double MoneySum => GetSum();
 
-        public IMoneyProvider this[int index] { get => ((IList<IMoneyProvider>)_cases)[index]; set => ((IList<IMoneyProvider>)_cases)[index] = value; }
-
-        public MoneyCasesController(MoneyType moneyType, int maximumitems) : base (maximumitems)
+        public MoneyCasesController(MoneyType moneyType)
         {
             MoneyType = moneyType;
         }
 
-        public MoneyCasesController(IEnumerable<IMoneyProvider> moneyCases, MoneyType moneyType) : base(0)
+        public MoneyCasesController(IEnumerable<MoneyCase> moneyCases, MoneyType moneyType) : base(0)
         {
             this.MoneyType = moneyType;
-            this._cases.AddRange(moneyCases);
+            this.AddRange(moneyCases);
         }
 
-        public bool Increment(IEnumerable<MoneyBundle> bundles)
+        public MoneyBundle Increment(MoneyBundle bundle)
+        {
+            if (CheckIncrement(bundle) == true)
+            {
+                int i = 0;
+                while (bundle.IsEmpty == false && i < this.Count)
+                {
+                    bundle = this[i].Increment(bundle);
+                    i += 1;
+                }
+            }
+            return bundle;
+        }
+
+        public MoneyBundle Decrement(MoneyBundle bundle)
         {
             throw new NotImplementedException();
         }
 
-        public bool Decrement(IEnumerable<MoneyBundle> bundles)
+        public bool CheckIncrement(MoneyBundle bundle)
         {
-            throw new NotImplementedException();
+            return CheckMoneyType(bundle.MoneyType) && bundle.Count < this.GetFreeCount();
         }
 
-        public bool CheckMoneyType(MoneyType moneyType)
+        public bool CheckDecrement(MoneyBundle bundle)
         {
-            throw new NotImplementedException();
+            return true;
+        }
+
+        private bool CheckMoneyType(MoneyType moneyType)
+        {
+            return (this.MoneyType.Nominal == moneyType.Nominal &&
+                this.MoneyType.Currency == moneyType.Currency) 
+                ||
+                (this.MoneyType.Nominal <= 0 &&
+                this.MoneyType.Currency == moneyType.Currency);
         }
 
 
@@ -48,64 +68,15 @@ namespace CadWiseAtm
             return sum;
         }
 
-
-        private List<IMoneyProvider> _cases = new List<IMoneyProvider>();
-
-        public int Count => ((ICollection<IMoneyProvider>)_cases).Count;
-
-        public bool IsReadOnly => ((ICollection<IMoneyProvider>)_cases).IsReadOnly;
-
-        public int IndexOf(IMoneyProvider item)
+        private int GetFreeCount()
         {
-            return ((IList<IMoneyProvider>)_cases).IndexOf(item);
+            int max = this.Sum(x => x.Limit);
+            int count = this.Sum(x => x.Count);
+            return max - count;
         }
 
-        public void Insert(int index, IMoneyProvider item)
-        {
-            ((IList<IMoneyProvider>)_cases).Insert(index, item);
-        }
 
-        public void RemoveAt(int index)
-        {
-            ((IList<IMoneyProvider>)_cases).RemoveAt(index);
-        }
-
-        public void Add(IMoneyProvider item)
-        {
-            if (this.IsFull == false && CheckMoneyType(item.MoneyType) == true)
-            {
-                ((ICollection<IMoneyProvider>)_cases).Add(item);
-            }
-        }
-
-        public void Clear()
-        {
-            ((ICollection<IMoneyProvider>)_cases).Clear();
-        }
-
-        public bool Contains(IMoneyProvider item)
-        {
-            return ((ICollection<IMoneyProvider>)_cases).Contains(item);
-        }
-
-        public void CopyTo(IMoneyProvider[] array, int arrayIndex)
-        {
-            ((ICollection<IMoneyProvider>)_cases).CopyTo(array, arrayIndex);
-        }
-
-        public bool Remove(IMoneyProvider item)
-        {
-            return ((ICollection<IMoneyProvider>)_cases).Remove(item);
-        }
-
-        public IEnumerator<IMoneyProvider> GetEnumerator()
-        {
-            return ((IEnumerable<IMoneyProvider>)_cases).GetEnumerator();
-        }
-
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return ((IEnumerable)_cases).GetEnumerator();
-        }
+        private List<MoneyCase> _cases = new List<MoneyCase>();
+   
     }
 }

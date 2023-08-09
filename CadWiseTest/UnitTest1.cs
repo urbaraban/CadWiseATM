@@ -36,8 +36,8 @@ namespace CadWiseTest
         [Fact]
         public void MoneyCaseFailIncrementTest()
         {
-            MoneyCase moneyCase = new MoneyCase(new MoneyType(100, MoneyCurrency.RUB), 100);
-            MoneyBundle bundle = new MoneyBundle(new MoneyType(200, MoneyCurrency.RUB), 100);
+            var moneyCase = new MoneyCase(new MoneyType(100, MoneyCurrency.RUB), 100);
+            var bundle = new MoneyBundle(new MoneyType(200, MoneyCurrency.RUB), 100);
             moneyCase.Increment(bundle);
             for (int i = 0; i < 10; i++)
             {
@@ -49,18 +49,58 @@ namespace CadWiseTest
         [Fact]
         public void MoneyCaseControllerIncrementTest()
         {
-            MoneyCase moneyCase100 = new MoneyCase(new MoneyType(100, MoneyCurrency.RUB), 100);
-            MoneyCase moneyCase200 = new MoneyCase(new MoneyType(200, MoneyCurrency.RUB), 100);
-            MoneyCasesController moneyProvider = new MoneyCasesController(new MoneyType(0, MoneyCurrency.RUB), -1);
-            moneyProvider.Add(moneyCase100);
-            moneyProvider.Add(moneyCase200);
+            IEnumerable<MoneyCase> cases = new MoneyCase[]
+            {
+                new MoneyCase(new MoneyType(100, MoneyCurrency.RUB), 100),
+                new MoneyCase(new MoneyType(100, MoneyCurrency.RUB), 100)
+            };
 
+            var moneyCases = new MoneyCasesController(cases, new MoneyType(100, MoneyCurrency.RUB));
+
+            var bundle = new MoneyBundle(new MoneyType(100, MoneyCurrency.RUB), 150);
+
+            bundle = moneyCases.Increment(bundle);
+
+            Assert.True(bundle.IsEmpty);
+        }
+
+        [Fact]
+        public void MoneyBundleUnionOne()
+        {
             List<MoneyBundle> moneyBundles = new List<MoneyBundle>() {
+                new MoneyBundle(new MoneyType(200, MoneyCurrency.RUB), 100),
+                new MoneyBundle(new MoneyType(200, MoneyCurrency.RUB), 100),
                 new MoneyBundle(new MoneyType(200, MoneyCurrency.RUB), 100)
             };
-            moneyProvider.Increment(moneyBundles);
+            IEnumerable<MoneyBundle> mb = MoneyBundle.Defrag(moneyBundles);
 
-            Assert.True(true);
+            Assert.True(mb.Count() == 1);
+        }
+
+        [Fact]
+        public void MoneyBundleUnionTwo()
+        {
+            List<MoneyBundle> moneyBundles = new List<MoneyBundle>() {
+                new MoneyBundle(new MoneyType(200, MoneyCurrency.RUB), 100),
+                new MoneyBundle(new MoneyType(200, MoneyCurrency.RUB), 100),
+                new MoneyBundle(new MoneyType(100, MoneyCurrency.RUB), 100)
+            };
+            IEnumerable<MoneyBundle> mb = MoneyBundle.Defrag(moneyBundles);
+
+            Assert.True(mb.Count() == 2);
+        }
+
+        [Fact]
+        public void MoneyBundleUnionDef()
+        {
+            List<MoneyBundle> moneyBundles = new List<MoneyBundle>() {
+                new MoneyBundle(new MoneyType(100, MoneyCurrency.RUB), 100),
+                new MoneyBundle(new MoneyType(200, MoneyCurrency.RUB), 100),
+                new MoneyBundle(new MoneyType(100, MoneyCurrency.RUB), 100)
+            };
+            IEnumerable<MoneyBundle> mb = MoneyBundle.Defrag(moneyBundles);
+
+            Assert.True(mb.Count() == 2);
         }
     }
 }
