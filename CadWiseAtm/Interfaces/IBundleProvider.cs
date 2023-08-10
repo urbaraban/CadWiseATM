@@ -2,7 +2,7 @@
 {
     public interface IBundleProvider
     {
-        public IEnumerable<MoneyBundle> Decrement(double value, MoneyType likeType);
+        public (bool, IEnumerable<MoneyBundle>) Decrement(double value, MoneyType likeType);
         public IEnumerable<MoneyBundle> Increment(IEnumerable<MoneyBundle> bundles);
 
     }

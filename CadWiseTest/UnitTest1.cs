@@ -190,7 +190,7 @@ namespace CadWiseTest
             {
                 bundles.Add(new MoneyBundle(i * 100, MoneyCurrency.RUB, 100));
             }
-            Assert.True(atm.Increment(bundles));
+            Assert.True(atm.Increment(bundles).Count() == 0);
 
             Assert.False(atm.Add(new MoneyCase(100, MoneyCurrency.RUB, 100, 100)));
             Assert.True(atm.IsFullMoney);
@@ -215,7 +215,7 @@ namespace CadWiseTest
             {
                 bundles.Add(new MoneyBundle(i * 100, MoneyCurrency.RUB, 100));
             }
-            Assert.False(atm.Increment(bundles));
+            Assert.False(atm.Increment(bundles).Count() == 0);
 
             Assert.Equal(atm.GetSum(MoneyCurrency.EUR), 5000, 5);
             Assert.Equal(atm.GetSum(MoneyCurrency.USD), 4500, 5);
@@ -231,6 +231,46 @@ namespace CadWiseTest
             ATM atm = new ATM(8);
             Assert.False(atm.IsFull);
             Assert.True(atm.IsFullMoney);
+        }
+
+        [Fact]
+        public void TestATMDecrement()
+        {
+            ATM atm = new ATM(8);
+
+            for (int i = 1; i < 6; i += 1)
+            {
+                Assert.True(atm.Add(new MoneyCase(i * 100, MoneyCurrency.RUB, 100, 100)));
+            }
+            Assert.Equal(atm.GetSum(MoneyCurrency.RUB), 150000, 5);
+            atm.Decrement(300, MoneyCurrency.RUB);
+            Assert.Equal(atm.GetSum(MoneyCurrency.RUB), 149700, 5);
+
+            Assert.False(atm.IsFull);
+            Assert.False(atm.IsFullMoney);
+        }
+
+        [Fact]
+        public void TestATMDecrement2()
+        {
+            ATM atm = new ATM(8);
+
+            Assert.True(atm.Add(new MoneyCase(10, MoneyCurrency.RUB, 100, 100)));
+            Assert.True(atm.Add(new MoneyCase(50, MoneyCurrency.RUB, 100, 100)));
+            Assert.True(atm.Add(new MoneyCase(100, MoneyCurrency.RUB, 100, 3)));
+            Assert.True(atm.Add(new MoneyCase(500, MoneyCurrency.RUB, 100, 100)));
+
+            Assert.Equal(atm.GetSum(MoneyCurrency.RUB), 56300);
+            var result = atm.Decrement(435, MoneyCurrency.RUB);
+            Assert.False(result.Item1);
+            Assert.Equal(atm.GetSum(MoneyCurrency.RUB), 56300);
+
+            var ost = atm.Decrement(result.Item2);
+            Assert.True(ost.Count() == 0);
+            Assert.Equal(atm.GetSum(MoneyCurrency.RUB), 55870);
+
+            Assert.False(atm.IsFull);
+            Assert.False(atm.IsFullMoney);
         }
     }
 }

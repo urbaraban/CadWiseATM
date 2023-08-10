@@ -14,12 +14,20 @@ namespace CadWiseAtm
         public MoneyCasesController(IEnumerable<MoneyCase> moneyCases, MoneyType moneyType) : base(moneyCases)
         {
             this.MoneyType = moneyType;
-            this.AddRange(moneyCases);
         }
 
         public MoneyCasesController(IEnumerable<MoneyCase> moneyCases, int nominal, MoneyCurrency currency) : 
             this(moneyCases, new MoneyType(nominal, currency))
             { }
+
+        public MoneyCasesController(IEnumerable<MoneyCase> moneyCases) :
+        this(moneyCases, new MoneyType(moneyCases.ElementAt(0).MoneyType.Nominal, moneyCases.ElementAt(0).MoneyType.Currency))
+        { 
+            if (moneyCases.GroupBy(x => x.MoneyType).Count() > 2)
+            {
+                throw new ArgumentException("Many MoneyType in cases");
+            }
+        }
 
         public MoneyBundle Increment(MoneyBundle bundle)
         {
@@ -37,9 +45,10 @@ namespace CadWiseAtm
 
         public MoneyBundle GetMaxBundle(double value)
         {
-            if (this.MoneyType.Nominal > 0 && this.MoneyType.Currency != MoneyCurrency.NONE)
+            if (this.GetCount() > 0 && this.MoneyType.Nominal > 0 && 
+                this.MoneyType.Currency != MoneyCurrency.NONE)
             {
-                int max_count = (int)value / this.MoneyType.Nominal;
+                int max_count = Math.Min(this.GetCount(), (int)value / this.MoneyType.Nominal);
                 return new MoneyBundle(this.MoneyType, max_count);
             }
             else
@@ -111,9 +120,14 @@ namespace CadWiseAtm
             return count;
         }
 
-
-
-        private List<MoneyCase> _cases = new List<MoneyCase>();
-   
+        public MoneyBundle GetMaxBundle(double value, MoneyType moneyType)
+        {
+            if (CheckMoneyType(moneyType) == true)
+            {
+                int count = (int)value / moneyType.Nominal;
+                return new MoneyBundle(moneyType, Math.Max(this.GetCount(), count));
+            }
+            return new MoneyBundle();
+        }   
     }
 }

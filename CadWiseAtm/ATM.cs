@@ -38,21 +38,54 @@ namespace CadWiseAtm
             return false;
         }
 
-        public IEnumerable<MoneyBundle> Decrement(double value, MoneyType likeType)
+        public (bool, IEnumerable<MoneyBundle>) Decrement(double value, MoneyCurrency currency)
         {
-            double check = value;
+           return this.Decrement(value, new MoneyType(-1, currency));
+        }
+
+        public (bool, IEnumerable<MoneyBundle>) Decrement(double check, MoneyType likeType)
+        {
             var bundles = new List<MoneyBundle>();
 
-            var cases = GetCases(likeType.Nominal, likeType.Currency);
-            if (cases.Any())
+            var groups = cases_.Where(x =>
+            x.MoneyType.Currency == likeType.Currency && 
+            (x.MoneyType.Nominal <= likeType.Nominal || likeType.Nominal <= 0))
+                .GroupBy(x => x.MoneyType)
+                .Reverse();
+
+            for (int i = 0; check > 0 && i < groups.Count(); i += 1)
             {
-                var controller = new MoneyCasesController(cases, likeType.Nominal, likeType.Currency);
+                var bundle = new MoneyCasesController(groups.ElementAt(i)).GetMaxBundle(check);
+                if (bundle.IsEmpty == false)
+                {
+                    bundles.Add(bundle);
+                }
+                check -= bundle.Sum;
             }
             
-            if (controller.Decrement(bundle).IsEmpty == false)
+            if (bundles.Count() > 0 && check == 0)
             {
-                return false;
+                this.Decrement(bundles);
             }
+
+            return (check == 0, bundles);
+        }
+
+        public IEnumerable<MoneyBundle> Decrement(IEnumerable<MoneyBundle> bundles)
+        {
+            var result = new List<MoneyBundle>();
+            var union = MoneyBundle.Defrag(bundles);
+            foreach (var bundle in union)
+            {
+                var cases = cases_.Where(x => x.MoneyType == bundle.MoneyType);
+                var controller = new MoneyCasesController(cases, bundle.MoneyType);
+                MoneyBundle residue = controller.Decrement(bundle);
+                if (residue.IsEmpty == false)
+                {
+                    result.Add(residue);
+                }
+            }
+            return result;
         }
 
         public IEnumerable<MoneyBundle> Increment(IEnumerable<MoneyBundle> bundles)
