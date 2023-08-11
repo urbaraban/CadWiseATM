@@ -2,52 +2,63 @@
 
 namespace CadWiseAtm
 {
-    public class ATM : IBundleProvider, ILimited
+    public class ATM : List<MoneyCase>, IBundleProvider, ILimited
     {
-        private List<MoneyCase> cases_ { get; } = new List<MoneyCase>();
-
         public bool IsFullMoney => GetFullMoneyLimit();
 
         public bool IsFull => this.Count == this.Limit;
-        public int Count => cases_.Count;
-
         public int Limit { get; }
+
+        public IEnumerable<MoneyCurrency> CurrencyList => this.Select(x => x.MoneyType.Currency).Distinct();
 
         public ATM(int caselimit) 
         {
             this.Limit = caselimit;
         }
 
-        public bool Add(MoneyCase moneyCase)
+        public new bool Add(MoneyCase moneyCase)
         {
             if (this.IsFull == false && moneyCase.MoneyType.Currency != MoneyCurrency.NONE)
             {
-                this.cases_.Add(moneyCase);
+                moneyCase.Removed += MoneyCase_Removed;
+                this.Add(moneyCase);
                 return true;
             }
             return false;
         }
 
-        public bool Remove(MoneyCase moneyCase)
+        public new bool AddRange(IEnumerable<MoneyCase> cases)
         {
-            if (this.cases_.Contains(moneyCase) == true)
+            foreach(var case_ in cases)
             {
-                this.cases_.Remove(moneyCase);
+                if (this.Add(case_) == false)
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        public new bool Remove(MoneyCase moneyCase)
+        {
+            if (this.Contains(moneyCase) == true)
+            {
+                this.Remove(moneyCase);
                 return true;
             }
             return false;
         }
 
-        public (bool, IEnumerable<MoneyBundle>) Decrement(double value, MoneyCurrency currency)
+        public (bool, IEnumerable<MoneyBundle>) Decrement(double check, MoneyCurrency currency)
         {
-           return this.Decrement(value, new MoneyType(-1, currency));
+           return this.Decrement(check, new MoneyType(-1, currency));
         }
 
         public (bool, IEnumerable<MoneyBundle>) Decrement(double check, MoneyType likeType)
         {
             var bundles = new List<MoneyBundle>();
 
-            var groups = cases_.Where(x =>
+            var groups = this.Where(x =>
             x.MoneyType.Currency == likeType.Currency && 
             (x.MoneyType.Nominal <= likeType.Nominal || likeType.Nominal <= 0))
                 .GroupBy(x => x.MoneyType)
@@ -77,7 +88,7 @@ namespace CadWiseAtm
             var union = MoneyBundle.Defrag(bundles);
             foreach (var bundle in union)
             {
-                var cases = cases_.Where(x => x.MoneyType == bundle.MoneyType);
+                var cases = this.Where(x => x.MoneyType == bundle.MoneyType);
                 var controller = new MoneyCasesController(cases, bundle.MoneyType);
                 MoneyBundle residue = controller.Decrement(bundle);
                 if (residue.IsEmpty == false)
@@ -94,7 +105,7 @@ namespace CadWiseAtm
             var result = new List<MoneyBundle>();
             foreach (var bundle in union)
             {
-                var cases = cases_.Where(x => x.MoneyType == bundle.MoneyType);
+                var cases = this.Where(x => x.MoneyType == bundle.MoneyType);
                 var controller = new MoneyCasesController(cases, bundle.MoneyType);
                 MoneyBundle residue = controller.Increment(bundle);
                 if (residue.IsEmpty == false)
@@ -114,7 +125,7 @@ namespace CadWiseAtm
 
         public IEnumerable<MoneyCase> GetCases(double nominal, MoneyCurrency moneyCurrency)
         {
-            return this.cases_.Where(x =>
+            return this.Where(x =>
             (x.MoneyType.Nominal == nominal || nominal < 0) &&
             x.MoneyType.Currency == moneyCurrency || moneyCurrency == MoneyCurrency.NONE);
         }
@@ -123,11 +134,19 @@ namespace CadWiseAtm
         private bool GetFullMoneyLimit()
         {
             bool status = true;
-            foreach(var case_ in cases_)
+            foreach(var case_ in this)
             {
                 status &= case_.IsFull;
             }
             return status;
+        }
+
+        private void MoneyCase_Removed(object? sender, EventArgs e)
+        {
+            if (sender is MoneyCase moneycase)
+            {
+                this.Remove(moneycase);
+            }
         }
     }
 }

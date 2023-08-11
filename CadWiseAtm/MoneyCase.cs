@@ -1,18 +1,28 @@
 ﻿using CadWiseAtm.Interfaces;
-using System.Reflection.Metadata;
 
 namespace CadWiseAtm
 {
     public class MoneyCase : IMoneyProvider, ILimited
     {
+        public event EventHandler Removed;
+        public event EventHandler CountChanged;
+
         public MoneyType MoneyType { get; }
 
         public double Sum => Count * MoneyType.Nominal;
 
-        public int Count { get; protected set; } = 0;
+        public int Count 
+        {
+            get => _count;
+            protected set
+            {
+                _count = value;
+                this.CountChanged?.Invoke(this, EventArgs.Empty);
+            }
+        }
+        private int _count = 0;
         public int Limit { get; }
         public bool IsFull => this.Count == this.Limit;
-
 
         public MoneyCase(MoneyType moneytype, int limit, int count = 0)
         {
@@ -49,6 +59,11 @@ namespace CadWiseAtm
         public bool CheckMoneyType(MoneyType moneyType)
         {
             return MoneyType == moneyType;
+        }
+
+        public void Remove()
+        {
+            this.Removed?.Invoke(this, EventArgs.Empty);
         }
 
         public override string ToString()

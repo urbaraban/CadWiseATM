@@ -1,0 +1,57 @@
+﻿<UserControl x:Class="CadWiseATMApp.Elements.CaseEditPanel"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:viewmodels="clr-namespace:CadWiseATMApp.ViewModels"
+             d:DataContext="{d:DesignInstance Type=viewmodels:CasesViewModel}"
+             mc:Ignorable="d" 
+             d:DesignHeight="50" d:DesignWidth="200">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <Style TargetType="Label">
+                <Setter Property="VerticalAlignment" Value="Center" />
+                <Setter Property="HorizontalAlignment" Value="Center" />
+            </Style>
+            <Style TargetType="ComboBox">
+                <Setter Property="VerticalAlignment" Value="Center" />
+                <Setter Property="Margin" Value="3, 0" />
+            </Style>
+            <Style TargetType="TextBox">
+                <Setter Property="VerticalAlignment" Value="Center" />
+                <Setter Property="TextAlignment" Value="Right" />
+            </Style>
+            <Style TargetType="Button">
+                <Setter Property="VerticalAlignment" Value="Center" />
+                <Setter Property="HorizontalAlignment" Value="Right" />
+            </Style>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition />
+            <ColumnDefinition />
+            <ColumnDefinition Width="auto" />
+            <ColumnDefinition />
+            <ColumnDefinition Width="auto"/>
+        </Grid.ColumnDefinitions>
+        <ComboBox d:Text="EUR"
+                  Grid.Column="0"
+                  Text="{Binding Currency}" />
+        <TextBox d:Text="22"
+                 Grid.Column="1"
+                 Text="{Binding Count}"/>
+        <Label d:Content="/"
+               Grid.Column="2"
+               Content="{Binding Limit}" />
+        <TextBox d:Text="1000"
+               Grid.Column="3"
+               Text="{Binding Limit}" />
+        <Button Content="x"
+                Foreground="Red"
+                Background="Transparent"
+                BorderThickness="0"
+                Grid.Column="4"
+                Width="{Binding ActualHeight, RelativeSource={RelativeSource Self}}"/>
+    </Grid>
+</UserControl>

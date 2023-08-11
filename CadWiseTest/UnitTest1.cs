@@ -1,4 +1,5 @@
 using CadWiseAtm;
+using Xunit;
 
 namespace CadWiseTest
 {
@@ -271,6 +272,20 @@ namespace CadWiseTest
 
             Assert.False(atm.IsFull);
             Assert.False(atm.IsFullMoney);
+        }
+
+        [Fact]
+        public void TestATMCurrencyList()
+        {
+            ATM atm = new ATM(8);
+
+            Assert.True(atm.Add(new MoneyCase(10, MoneyCurrency.RUB, 100, 100)));
+            Assert.True(atm.Add(new MoneyCase(50, MoneyCurrency.RUB, 100, 100)));
+            Assert.True(atm.Add(new MoneyCase(100, MoneyCurrency.EUR, 100, 3)));
+            Assert.True(atm.Add(new MoneyCase(500, MoneyCurrency.USD, 100, 100)));
+
+            Assert.True(atm.CurrencyList.Count() == 3);
+            Assert.True(atm.CurrencyList.Contains(MoneyCurrency.EUR));
         }
     }
 }

@@ -1,0 +1,37 @@
+﻿<UserControl x:Class="CadWiseATMApp.Elements.CaseView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:viewmodels="clr-namespace:CadWiseATMApp.ViewModels"
+             d:DataContext="{d:DesignInstance Type=viewmodels:CasesViewModel}"
+             mc:Ignorable="d" 
+             Height="100" Width="100">
+    <Grid>
+        <ProgressBar d:Value="44"
+                     d:Maximum="100"
+                     Value="{Binding Count}"
+                     Maximum="{Binding Limit}">
+            <ProgressBar.RenderTransform>
+                <RotateTransform Angle="270"
+                                 CenterX="50"
+                                 CenterY="50"/>
+            </ProgressBar.RenderTransform>
+        </ProgressBar>
+        <Label Content="{Binding Currency}"
+               d:Content="RUB"
+               FontSize="22"
+               VerticalAlignment="Center"
+               HorizontalAlignment="Center"/>
+        <Label d:Content="44/100"
+               HorizontalAlignment="Center"
+               VerticalAlignment="Bottom">
+            <Label.Content>
+                <MultiBinding StringFormat="{}{0}/{1}">
+                    <Binding Path="Count" />
+                    <Binding Path="Limit" />
+                </MultiBinding>
+            </Label.Content>
+        </Label>
+    </Grid>
+</UserControl>

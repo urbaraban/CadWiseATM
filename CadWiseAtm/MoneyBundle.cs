@@ -1,10 +1,10 @@
 ﻿namespace CadWiseAtm
 {
-    public readonly struct MoneyBundle
+    public struct MoneyBundle
     {
         public readonly bool IsEmpty => MoneyType.IsEmpty || Count == 0;
         public MoneyType MoneyType { get; }
-        public int Count { get; }
+        public int Count { get; set; }
         public int Sum => Count * MoneyType.Nominal;
 
         public MoneyBundle()
