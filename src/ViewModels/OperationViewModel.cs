@@ -23,6 +23,8 @@ namespace CadWiseATMApp.ViewModels
             this.Init();
         }
 
+        public OperationViewModel(OperationViewModel operationViewModel) : this(operationViewModel.atm) { }
+
         public void Init()
         {
             this.timer = new Timer(20000);

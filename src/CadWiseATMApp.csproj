@@ -15,8 +15,4 @@
     <ProjectReference Include="..\CadWiseAtm\CadWiseAtm.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Converters\" />
-  </ItemGroup>
-
 </Project>

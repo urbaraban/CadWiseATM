@@ -1,36 +1,49 @@
 ﻿using CadWiseAtm;
+using CadWiseATMApp.Pages;
+using CadWiseATMApp.Windows;
 using Microsoft.Xaml.Behaviors.Core;
-using System.Collections.Generic;
+using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Navigation;
 
 namespace CadWiseATMApp.ViewModels
 {
     internal class AtmViewModel : CommonNotifyModel
     {
-        public OperationViewModel ActualOpeartion => OperationsStack.Peek();
-        public Stack<OperationViewModel> OperationsStack { get; } = new Stack<OperationViewModel>();
+        public OperationViewModel AlreadyOpeartion
+        {
+            get => _operation;
+            set
+            {
+                this._operation = value;
+                OnPropertyChanged(nameof(AlreadyOpeartion));
+            }
+        }
+        private OperationViewModel _operation;
+
         private ATM atm { get; }
 
-        public AtmViewModel(ATM atm)
+        public AtmViewModel()
         {
-            this.atm = atm;
-            this.OperationsStack.Push(new StartViewModel(atm));
+            this.atm = new ATM(99);
         }
 
-        public ICommand BackCommand => new ActionCommand(() =>
+        public AtmViewModel(ATM atm) : this()
         {
-            if (OperationsStack.Peek() is not StartViewModel)
-            {
-                OperationsStack.Pop();
-            }
+            this.atm = atm;
+        }
+
+
+        public ICommand ShowInsideCommand => new ActionCommand(() =>
+        {
+            InsideWindow insideWindow = new InsideWindow();
+            insideWindow.DataContext = new InsideViewModel(this.atm);
+            insideWindow.Show();
         });
 
         public void Clear()
         {
-            while (OperationsStack.Peek() is not StartViewModel)
-            {
-                OperationsStack.Pop();
-            }
+            
         }
     }
 }

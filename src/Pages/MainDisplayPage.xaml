@@ -3,15 +3,20 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+      xmlns:viewmodels="clr-namespace:CadWiseATMApp.ViewModels"
+      d:DataContext="{d:DesignInstance Type=viewmodels:AtmViewModel}"
       mc:Ignorable="d" 
       d:DesignHeight="500" d:DesignWidth="500"
       Title="MainDisplayPage">
+    
     <Page.Resources>
         <ResourceDictionary>
             <Style TargetType="Button">
                 <Setter Property="FontSize" Value="22"/>
                 <Setter Property="Margin" Value="5" />
                 <Setter Property="Padding" Value="15" />
+                <Setter Property="Background" Value="Green" />
+                <Setter Property="Foreground" Value="White" />
             </Style>
         </ResourceDictionary>
     </Page.Resources>
@@ -26,9 +31,8 @@
                    Foreground="White"
                    FontSize="36"/>
         </Border>
-        <Frame Grid.Row="1">
-            
-        </Frame>
+        <Frame Grid.Row="1"
+               x:Name="NavigateFrame"/>
         <DockPanel Grid.Row="2"
                    LastChildFill="False">
             <Button Content="Back"

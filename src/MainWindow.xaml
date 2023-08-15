@@ -3,15 +3,21 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:viewmodels="clr-namespace:CadWiseATMApp.ViewModels"
+        d:DataContext="{d:DesignInstance Type=viewmodels:AtmViewModel}"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="400">
+    <Window.DataContext>
+        <viewmodels:AtmViewModel />
+    </Window.DataContext>
     <DockPanel>
         <Menu DockPanel.Dock="Top">
             <MenuItem Header="Create new" 
                       Click="CreateNewItem_Click"/>
             <MenuItem Header="Insides" 
-                      Click="InsideItem_Click"/>
+                      Command="{Binding ShowInsideCommand}"/>
         </Menu>
-        <Frame Content="{Binding ., Converter={StaticResource GetHubPage}}"/>
+        <Frame x:Name="OperationFrame"
+               Content="{Binding DisplayPage}" />
     </DockPanel>
 </Window>

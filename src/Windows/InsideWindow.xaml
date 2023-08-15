@@ -3,11 +3,66 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:elements="clr-namespace:CadWiseATMApp.Elements"
+        xmlns:viewmodels="clr-namespace:CadWiseATMApp.ViewModels"
+        xmlns:converters="clr-namespace:CadWiseATMApp.Converters"
+        d:DataContext="{d:DesignInstance Type=viewmodels:InsideViewModel}"
         mc:Ignorable="d"
         Title="InsideWindow" Height="450" Width="400">
-    <DockPanel>
-        <ItemsControl>
-            
-        </ItemsControl>
-    </DockPanel>
+    <Window.Resources>
+        <ResourceDictionary>
+            <Style TargetType="elements:CaseView">
+                <Setter Property="Margin" Value="5" />
+            </Style>
+            <Style TargetType="Button">
+                <Setter Property="FontSize" Value="22" />
+                <Setter Property="Padding" Value="12" />
+            </Style>
+            <converters:CaseViewConverter x:Key="CaseView"/>
+        </ResourceDictionary>
+    </Window.Resources>
+    <DockPanel LastChildFill="False">
+        <DockPanel DockPanel.Dock="Bottom"
+                   LastChildFill="False"
+                   Margin="5">
+            <Button DockPanel.Dock="Left"
+                    Content="Add"
+                    Command="{Binding AddCaseCommand}"/>
+            <Button DockPanel.Dock="Left"
+                    Content="Random"
+                    Command="{Binding AddRandomCaseCommand}"/>
+            <TextBlock d:Text="??/??"
+                       VerticalAlignment="Center"
+                       FontSize="22"
+                       Margin="5">
+                <TextBlock.Text>
+                    <MultiBinding StringFormat=" {0}/{1}">
+                        <Binding Path="Count"/>
+                        <Binding Path="Limit" />
+                    </MultiBinding>
+                </TextBlock.Text>
+            </TextBlock>
+            <Button DockPanel.Dock="Right"
+                    Content="Remove"
+                    Command="{Binding RemoveCaseCommand}"/>
+        </DockPanel>
+        <ScrollViewer DockPanel.Dock="Top">
+            <ListBox ItemsSource="{Binding MoneyCases, Mode=OneWay}"
+                     SelectedItem="{Binding SelectedCase}"
+                     ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                     d:ItemsSource="{d:SampleData ItemCount=7}">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <elements:CaseView DataContext="{Binding ., Converter={StaticResource CaseView}}"/>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+                <ListBox.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <WrapPanel IsItemsHost="True" />
+                    </ItemsPanelTemplate>
+                </ListBox.ItemsPanel>
+            </ListBox>
+        </ScrollViewer>
+    </DockPanel>   
+
 </Window>

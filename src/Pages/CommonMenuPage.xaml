@@ -1,0 +1,23 @@
+﻿<Page x:Class="CadWiseATMApp.Pages.CommonMenuPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+      xmlns:viewmodels="clr-namespace:CadWiseATMApp.ViewModels"
+      d:DataContext="{d:DesignInstance Type=viewmodels:OperationViewModel}"
+      mc:Ignorable="d" 
+      d:DesignHeight="450" d:DesignWidth="400"
+      Title="CommonMenuPage">
+    <Grid>
+        <ListView ItemsSource="{Binding Operation}"
+                  d:ItemsSource="{d:SampleData ItemCount=7}"
+                  HorizontalAlignment="Center"
+                  VerticalAlignment="Center">
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <Button Content="Command" />
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+    </Grid>
+</Page>

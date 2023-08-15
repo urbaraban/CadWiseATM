@@ -10,28 +10,34 @@
     <Grid>
         <ProgressBar d:Value="44"
                      d:Maximum="100"
-                     Value="{Binding Count}"
-                     Maximum="{Binding Limit}">
+                     Value="{Binding Count, Mode=OneWay}"
+                     Maximum="{Binding Limit, Mode=OneWay}">
             <ProgressBar.RenderTransform>
                 <RotateTransform Angle="270"
                                  CenterX="50"
                                  CenterY="50"/>
             </ProgressBar.RenderTransform>
         </ProgressBar>
-        <Label Content="{Binding Currency}"
-               d:Content="RUB"
-               FontSize="22"
+        <TextBlock d:Text="99 RUB"
+               FontSize="17"
                VerticalAlignment="Center"
-               HorizontalAlignment="Center"/>
-        <Label d:Content="44/100"
+               HorizontalAlignment="Center">
+            <TextBlock.Text>
+                <MultiBinding StringFormat=" {0} {1}">
+                    <Binding Path="Nominal"/>
+                    <Binding Path="Currency" />
+                </MultiBinding>
+            </TextBlock.Text>
+        </TextBlock>
+        <TextBlock d:Text="44/100"
                HorizontalAlignment="Center"
                VerticalAlignment="Bottom">
-            <Label.Content>
-                <MultiBinding StringFormat="{}{0}/{1}">
-                    <Binding Path="Count" />
-                    <Binding Path="Limit" />
+            <TextBlock.Text>
+                <MultiBinding StringFormat=" {0}/{1}">
+                    <Binding Path="Count"/>
+                    <Binding Path="Limit"/>
                 </MultiBinding>
-            </Label.Content>
-        </Label>
+            </TextBlock.Text>
+        </TextBlock>
     </Grid>
 </UserControl>

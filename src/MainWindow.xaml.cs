@@ -1,8 +1,6 @@
 ﻿using CadWiseAtm;
 using CadWiseATMApp.ViewModels;
-using CadWiseATMApp.Windows;
 using System.Windows;
-using System.Windows.Data;
 
 namespace CadWiseATMApp
 {
@@ -14,17 +12,6 @@ namespace CadWiseATMApp
         }
 
         private void CreateNewItem_Click(object sender, RoutedEventArgs e) => CreateNewAtm();
-
-        private void InsideItem_Click(object sender, RoutedEventArgs e) => ShowInsideWindow();
-
-        private void ShowInsideWindow()
-        {
-            InsideWindow insideWindow = new InsideWindow();
-            Binding contextbinding = new Binding("DataContext");
-            contextbinding.Source = this;
-            insideWindow.SetBinding(Window.DataContextProperty, contextbinding);
-            insideWindow.Show();
-        }
 
         private void CreateNewAtm()
         {

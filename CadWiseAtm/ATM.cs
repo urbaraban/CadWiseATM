@@ -21,7 +21,7 @@ namespace CadWiseAtm
             if (this.IsFull == false && moneyCase.MoneyType.Currency != MoneyCurrency.NONE)
             {
                 moneyCase.Removed += MoneyCase_Removed;
-                this.Add(moneyCase);
+                base.Add(moneyCase);
                 return true;
             }
             return false;
@@ -43,7 +43,7 @@ namespace CadWiseAtm
         {
             if (this.Contains(moneyCase) == true)
             {
-                this.Remove(moneyCase);
+                base.Remove(moneyCase);
                 return true;
             }
             return false;

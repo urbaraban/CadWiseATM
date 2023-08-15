@@ -6,6 +6,7 @@ namespace CadWiseATMApp.ViewModels
 {
     internal class CasesViewModel : CommonNotifyModel
     {
+        public int Nominal => case_.MoneyType.Nominal;
         public MoneyCurrency Currency => case_.MoneyType.Currency;
         public int Limit => case_.Limit;
         public int Count => case_.Count;
